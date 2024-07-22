@@ -1,3 +1,4 @@
+//**
 using MyWebAPI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,8 +10,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+//Registrar EmpleadoData como un servicio singleton
 builder.Services.AddSingleton<EmpleadoData>();
 
+//La política "NuevaPolitica" permitirá solicitudes desde cualquier origen, con cualquier método y encabezado
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("NuevaPolitica", app =>
@@ -28,6 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+//Añadir Politica
 app.UseCors("NuevaPolitica");
 
 app.UseAuthorization();

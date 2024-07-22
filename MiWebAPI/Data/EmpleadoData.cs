@@ -7,19 +7,28 @@ namespace MyWebAPI.Data
 {
     public class EmpleadoData
     {
+        //La palabra clave readonly indica que esta variable solo puede ser asignada una vez (generalmente en el constructor)
         private readonly string conexion;
 
         public EmpleadoData(IConfiguration configuration)
         {
+            //obtiene la cadena de conexión con nombre "CadenaSQL" de la configuración de la aplicación utilizando
+            //el método GetConnectionString
             conexion = configuration.GetConnectionString("CadenaSQL");
         }
 
-        public async Task<List<Empleado>> Lista()
+        //Metodo asincrono que devuelve una tarea
+        public async Task<List<Empleado>> Lista()   
         {
+            //Se inicializa una nueva lista vacía llamada lista, que almacenará objetos de tipo Empleado.
             List<Empleado> lista = new List<Empleado>();
+            //Se crea una nueva instacia SQLConnection llamada con
             using (var con = new SqlConnection(conexion))
             {
-                await con.OpenAsync();
+                //Se abre la conexión a la base de datos de forma asincrónica utilizando el método OpenAsync()
+                await con.OpenAsync(); //OpenAsync espera hasta que la conexión se abra antes de continuar con el siguiente código.
+
+                //Se crea un nuevo comando SQL (SqlCommand) llamado cmd que ejecutará el procedimiento "sp_listaEmpleados" en la conexión con.
                 SqlCommand cmd = new SqlCommand("sp_listaEmpleados", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 using (var reader = await cmd.ExecuteReaderAsync())
